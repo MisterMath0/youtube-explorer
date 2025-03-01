@@ -5,10 +5,10 @@
   "installCommand": "npm install",
   "framework": "nextjs",
   "functions": {
-    "api/transcript.js": {
+    "pages/api/transcript.js": {
       "maxDuration": 60
     },
-    "api/channel.js": {
+    "pages/api/channel.js": {
       "maxDuration": 60
     }
   }
