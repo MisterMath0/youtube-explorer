@@ -1,14 +1,15 @@
 {
-    "version": 2,
-    "builds": [
-      { "src": "package.json", "use": "@vercel/next" }
-    ],
-    "functions": {
-      "api/transcript.js": {
-        "maxDuration": 60
-      },
-      "api/channel.js": {
-        "maxDuration": 60
-      }
+  "version": 2,
+  "buildCommand": "next build",
+  "devCommand": "next dev",
+  "installCommand": "npm install",
+  "framework": "nextjs",
+  "functions": {
+    "api/transcript.js": {
+      "maxDuration": 60
+    },
+    "api/channel.js": {
+      "maxDuration": 60
     }
   }
+}
