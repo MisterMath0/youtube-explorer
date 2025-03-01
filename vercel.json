@@ -1,0 +1,14 @@
+{
+    "version": 2,
+    "builds": [
+      { "src": "package.json", "use": "@vercel/next" }
+    ],
+    "functions": {
+      "api/transcript.js": {
+        "maxDuration": 60
+      },
+      "api/channel.js": {
+        "maxDuration": 60
+      }
+    }
+  }
