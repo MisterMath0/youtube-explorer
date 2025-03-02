@@ -85,7 +85,7 @@ export default function Documentation() {
           <h4>To extract a video transcript:</h4>
           <ol>
             <li>Select the "Video Transcript" tab</li>
-            <li>Enter the full YouTube video URL (e.g., https://www.youtube.com/watch?v=VIDEO_ID)</li>
+            <li>Enter the full YouTube video URL (e.g., {`https://www.youtube.com/watch?v=VIDEO_ID`})</li>
             <li>Choose your preferred transcript format (TXT or JSON)</li>
             <li>Click "Extract Transcript" to retrieve the transcript</li>
           </ol>
@@ -97,10 +97,10 @@ export default function Documentation() {
           <ol>
             <li>Go to the <a href="https://console.cloud.google.com/" target="_blank" rel="noopener noreferrer">Google Cloud Console</a></li>
             <li>Create a new project or select an existing one</li>
-            <li>Navigate to "APIs & Services" > "Library"</li>
+            <li>Navigate to "APIs & Services" -&gt; "Library"</li>
             <li>Search for "YouTube Data API v3" and enable it</li>
-            <li>Go to "APIs & Services" > "Credentials"</li>
-            <li>Click "Create Credentials" > "API Key"</li>
+            <li>Go to "APIs & Services" -&gt; "Credentials"</li>
+            <li>Click "Create Credentials" -&gt; "API Key"</li>
             <li>Copy your new API key</li>
           </ol>
 

@@ -3,24 +3,25 @@
 // 5. components/ResultsDisplay.js
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Download, Copy, Check, Play } from 'lucide-react';
+import Image from 'next/image';
+
 
 const ResultsDisplay = ({ results, type }) => {
   const [copiedIndex, setCopiedIndex] = useState(null);
-  
+
   if (!results) return null;
-  
+
   const handleCopy = (text, index) => {
     navigator.clipboard.writeText(text);
     setCopiedIndex(index);
     setTimeout(() => setCopiedIndex(null), 2000);
   };
-  
+
   const handleDownload = (data, filename) => {
     const blob = new Blob([typeof data === 'string' ? data : JSON.stringify(data, null, 2)], { type: 'text/plain' });
     const url = URL.createObjectURL(blob);
@@ -32,7 +33,7 @@ const ResultsDisplay = ({ results, type }) => {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
   };
-  
+
   // Display for a single video transcript
   if (type === 'video') {
     return (
@@ -72,7 +73,7 @@ const ResultsDisplay = ({ results, type }) => {
       </Card>
     );
   }
-  
+
   // Display for channel data
   return (
     <motion.div
@@ -109,7 +110,7 @@ const ResultsDisplay = ({ results, type }) => {
           </div>
         </CardContent>
       </Card>
-      
+
       {/* Videos */}
       <Card>
         <CardHeader>
@@ -132,11 +133,15 @@ const ResultsDisplay = ({ results, type }) => {
                 <div className="flex flex-col md:flex-row gap-4">
                   <div className="shrink-0">
                     {video.thumbnailUrl ? (
-                      <img 
-                        src={video.thumbnailUrl} 
-                        alt={video.title} 
-                        className="w-full md:w-40 h-auto rounded-md object-cover"
-                      />
+                      <div className="relative w-full md:w-40 h-24">
+                        <Image
+                          src={video.thumbnailUrl}
+                          alt={video.title}
+                          fill
+                          className="rounded-md object-cover"
+                          sizes="(max-width: 768px) 100vw, 160px"
+                        />
+                      </div>
                     ) : (
                       <div className="w-full md:w-40 h-24 bg-gray-200 rounded-md flex items-center justify-center">
                         <Play size={32} className="text-gray-400" />
@@ -150,7 +155,7 @@ const ResultsDisplay = ({ results, type }) => {
                       <Badge variant="outline">{new Date(video.publishedAt).toLocaleDateString()}</Badge>
                     </div>
                     <p className="text-sm text-gray-500 mt-2 line-clamp-2">{video.description}</p>
-                    
+
                     {video.transcript && (
                       <div className="mt-2">
                         <Button
@@ -167,7 +172,7 @@ const ResultsDisplay = ({ results, type }) => {
                 </div>
               </div>
             ))}
-            
+
             {results.videos.length > 10 && (
               <div className="text-center py-2">
                 <p className="text-sm text-gray-500">

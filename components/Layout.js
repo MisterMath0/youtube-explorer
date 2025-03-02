@@ -1,6 +1,8 @@
 
 // 2. components/Layout.js
 import React from 'react';
+import Link from 'next/link';
+import { BookOpen } from 'lucide-react';
 import { ThemeProvider } from '@/components/theme-provider';
 import { ModeToggle } from './ui/mode-toggle';
 import { Github } from 'lucide-react';

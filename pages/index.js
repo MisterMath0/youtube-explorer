@@ -5,10 +5,10 @@ import Head from 'next/head';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent } from '@/components/ui/card';
-import Layout from '../components/Layout';
-import ChannelExtractor from '../../components/ChannelExtractor';
-import VideoTranscript from '../components/VideoTranscript';
-import ResultsDisplay from '../components/ResultsDisplay';
+import Layout from '@/components/Layout';
+import ChannelExtractor from '@/components/ChannelExtractor';
+import VideoTranscript from '@/components/VideoTranscript';
+import ResultsDisplay from '@/components/ResultsDisplay';
 
 export default function Home() {
   const [results, setResults] = useState(null);
