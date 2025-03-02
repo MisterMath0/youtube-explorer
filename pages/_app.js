@@ -3,7 +3,12 @@ import '@/styles/globals.css';
 
 function YoutubeExplorer({ Component, pageProps }) {
   return (
-    <ThemeProvider defaultTheme="dark" attribute="class">
+    <ThemeProvider 
+      defaultTheme="dark" 
+      attribute="class"
+      enableSystem
+      disableTransitionOnChange
+    >
       <Component {...pageProps} />
     </ThemeProvider>
   );
