@@ -3,7 +3,7 @@ import React from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import { ChevronLeft } from 'lucide-react';
-import Layout from '../@components/Layout';
+import Layout from '@/components/Layout';
 
 export default function Documentation() {
   return (
