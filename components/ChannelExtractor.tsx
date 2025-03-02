@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -15,13 +15,20 @@ import {
 } from '@/components/ui/alert';
 import { ChannelApiParams, ExtractorProps } from '@/types';
 
-const ChannelExtractor: React.FC<ExtractorProps> = ({ onResults, setLoading }) => {
+const ChannelExtractor: React.FC<ExtractorProps> = ({ onResults, setLoading, apiKey: externalApiKey }) => {
   const [input, setInput] = useState<string>('');
   const [inputType, setInputType] = useState<'channel-id' | 'username'>('channel-id');
   const [apiKey, setApiKey] = useState<string>('');
   const [withTranscripts, setWithTranscripts] = useState<boolean>(false);
   const [maxVideos, setMaxVideos] = useState<number>(10);
   const [error, setError] = useState<string | null>(null);
+
+  // Use external API key if provided
+  useEffect(() => {
+    if (externalApiKey) {
+      setApiKey(externalApiKey);
+    }
+  }, [externalApiKey]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -75,66 +82,100 @@ const ChannelExtractor: React.FC<ExtractorProps> = ({ onResults, setLoading }) =
       exit={{ opacity: 0 }}
     >
       <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="space-y-2">
-          <Label>YouTube API Key</Label>
-          <Input
-            type="password"
-            placeholder="Enter your YouTube API key"
-            value={apiKey}
-            onChange={(e) => setApiKey(e.target.value)}
-          />
-          <p className="text-xs text-gray-500">
-            Get your API key from the <a href="https://console.cloud.google.com/" target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">Google Cloud Console</a>
-          </p>
-        </div>
+        {!externalApiKey && (
+          <div className="space-y-3">
+            <Label htmlFor="api-key" className="text-base font-medium">YouTube API Key</Label>
+            <Input
+              id="api-key"
+              type="password"
+              className="h-12 text-base"
+              placeholder="Enter your YouTube API key"
+              value={apiKey}
+              onChange={(e) => setApiKey(e.target.value)}
+            />
+            <p className="text-xs text-gray-500">
+              Get your API key from the <a href="https://console.cloud.google.com/" target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">Google Cloud Console</a>
+            </p>
+          </div>
+        )}
         
-        <div className="space-y-2">
-          <Label>Channel Identification</Label>
-          <RadioGroup value={inputType} onValueChange={(value) => setInputType(value as 'channel-id' | 'username')} className="flex space-x-4">
-            <div className="flex items-center space-x-2">
+        <div className="space-y-3">
+          <Label className="text-base font-medium">Channel Identification Method</Label>
+          <RadioGroup 
+            value={inputType} 
+            onValueChange={(value: string) => setInputType(value as 'channel-id' | 'username')} 
+            className="flex flex-col space-y-3"
+          >
+            <div className="flex items-center space-x-3 rounded-md border p-4">
               <RadioGroupItem value="channel-id" id="channel-id" />
-              <Label htmlFor="channel-id">Channel ID</Label>
+              <div>
+                <Label htmlFor="channel-id" className="text-base font-medium cursor-pointer">Channel ID</Label>
+                <p className="text-sm text-gray-500">Use the channel's unique identifier (e.g. UC...)</p>
+              </div>
             </div>
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-3 rounded-md border p-4">
               <RadioGroupItem value="username" id="username" />
-              <Label htmlFor="username">Username</Label>
+              <div>
+                <Label htmlFor="username" className="text-base font-medium cursor-pointer">Username</Label>
+                <p className="text-sm text-gray-500">Use the channel's custom username</p>
+              </div>
             </div>
           </RadioGroup>
         </div>
         
-        <div className="space-y-2">
-          <Label>Enter {inputType === 'channel-id' ? 'Channel ID' : 'Username'}</Label>
+        <div className="space-y-3">
+          <Label htmlFor="channel-input" className="text-base font-medium">
+            Enter {inputType === 'channel-id' ? 'Channel ID' : 'Username'}
+          </Label>
           <div className="relative">
             <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-500">
               <Youtube size={18} />
             </div>
             <Input
-              className="pl-10"
+              id="channel-input"
+              className="pl-10 h-12 text-base"
               placeholder={inputType === 'channel-id' ? 'UC...' : 'Channel username'}
               value={input}
               onChange={(e) => setInput(e.target.value)}
             />
           </div>
+          <p className="text-xs text-gray-500">
+            {inputType === 'channel-id' 
+              ? "Channel ID starts with 'UC' and can be found in the channel's URL" 
+              : "Username is the custom name used in the channel's URL"}
+          </p>
         </div>
         
-        <div className="space-y-2">
-          <Label>Maximum videos to extract</Label>
+        <div className="space-y-3">
+          <Label htmlFor="max-videos" className="text-base font-medium">Maximum Videos to Extract</Label>
           <Input
+            id="max-videos"
             type="number"
             min="1"
             max="500"
+            className="h-12 text-base"
             value={maxVideos}
             onChange={(e) => setMaxVideos(Number(e.target.value))}
           />
+          <p className="text-xs text-gray-500">
+            Higher values will take longer to process (max 500)
+          </p>
         </div>
         
-        <div className="flex items-center space-x-2">
+        <div className="flex items-start space-x-3 pt-2">
           <Checkbox 
             id="transcripts" 
             checked={withTranscripts}
-            onCheckedChange={(checked) => setWithTranscripts(checked === true)}
+            onCheckedChange={(checked: boolean) => setWithTranscripts(checked === true)}
           />
-          <Label htmlFor="transcripts">Extract video transcripts (may take longer)</Label>
+          <div className="grid gap-1.5 leading-none">
+            <Label htmlFor="transcripts" className="text-base font-medium cursor-pointer">
+              Extract Video Transcripts
+            </Label>
+            <p className="text-xs text-gray-500">
+              This will significantly increase processing time
+            </p>
+          </div>
         </div>
         
         {error && (
@@ -145,7 +186,7 @@ const ChannelExtractor: React.FC<ExtractorProps> = ({ onResults, setLoading }) =
           </Alert>
         )}
         
-        <Button type="submit" className="w-full">
+        <Button type="submit" className="w-full h-12 text-base font-medium">
           Extract Channel Data
         </Button>
       </form>

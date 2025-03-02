@@ -1,16 +1,15 @@
-export interface TranscriptLine {
-    time: string;
-    text: string;
-  }
-  
-  export interface ChannelInfo {
+// types.ts
+export interface ChannelInfo {
     id: string;
     title: string;
     description: string;
+    customUrl?: string;
     publishedAt: string;
+    thumbnailUrl?: string;
+    country?: string;
+    viewCount: string;
     subscriberCount: string;
     videoCount: string;
-    viewCount: string;
   }
   
   export interface VideoInfo {
@@ -18,11 +17,12 @@ export interface TranscriptLine {
     title: string;
     description: string;
     publishedAt: string;
-    thumbnailUrl: string;
+    thumbnailUrl?: string;
     viewCount: string;
-    likeCount: string;
-    commentCount: string;
-    transcript?: TranscriptLine[];
+    likeCount?: string;
+    commentCount?: string;
+    duration?: string;
+    transcript?: string | Record<string, any>;
   }
   
   export interface ChannelData {
@@ -31,30 +31,38 @@ export interface TranscriptLine {
   }
   
   export interface VideoTranscriptData {
-    title: string;
+    videoId: string;
+    title?: string;
+    transcript: string | Record<string, any>;
     format: string;
-    transcript: string | TranscriptLine[];
-  }
-  
-  export interface VideoApiParams {
-    videoUrl: string;
-    transcriptFormat: string;
-  }
-  
-  export interface ChannelApiParams {
-    inputType: 'channel-id' | 'username';
-    input: string;
-    apiKey: string;
-    withTranscripts: boolean;
-    maxVideos: number;
-  }
-  
-  export interface ExtractorProps {
-    onResults: (data: ChannelData | VideoTranscriptData) => void;
-    setLoading: (loading: boolean) => void;
   }
   
   export interface ResultsDisplayProps {
     results: ChannelData | VideoTranscriptData;
     type: string;
+  }
+  
+  export interface ExtractorProps {
+    onResults: (data: ChannelData | VideoTranscriptData) => void;
+    setLoading: (loading: boolean) => void;
+    apiKey?: string;
+  }
+  
+  export interface ChannelApiParams {
+    // Original params
+    inputType?: 'channel-id' | 'username';
+    input?: string;
+    withTranscripts?: boolean;
+    
+    // New params
+    channelUrl?: string;
+    includeTranscripts?: boolean;
+    maxVideos: number;
+    apiKey?: string;
+  }
+  
+  export interface VideoApiParams {
+    videoUrl: string;
+    transcriptFormat: string;
+    apiKey?: string;
   }

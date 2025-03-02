@@ -1,8 +1,10 @@
+// lib/youtube-api.ts
 import axios from 'axios';
+import type { VideoInfo } from '@/types';
 
 // Function to extract YouTube Channel data
-export async function getChannelInfo(apiKey, channelId = null, username = null) {
-  const params = {
+export async function getChannelInfo(apiKey: string, channelId: string | null = null, username: string | null = null) {
+  const params: Record<string, string> = {
     part: 'snippet,statistics,contentDetails',
     key: apiKey
   };
@@ -30,18 +32,18 @@ export async function getChannelInfo(apiKey, channelId = null, username = null) 
 }
 
 // Function to get channel videos
-export async function getChannelVideos(apiKey, channelId, maxResults = 50) {
+export async function getChannelVideos(apiKey: string, channelId: string, maxResults = 50) {
   try {
     // First, get the uploads playlist ID
     const channelInfo = await getChannelInfo(apiKey, channelId);
     const uploadsPlaylistId = channelInfo.contentDetails.relatedPlaylists.uploads;
     
-    let videos = [];
+    let videos: string | any[] = [];
     let nextPageToken = null;
     
     // Fetch videos until we have enough or there are no more pages
     while (true) {
-      const params = {
+      const params: Record<string, string | number | undefined> = {
         part: 'snippet,contentDetails',
         maxResults: 50, // API maximum
         playlistId: uploadsPlaylistId,
@@ -69,7 +71,7 @@ export async function getChannelVideos(apiKey, channelId, maxResults = 50) {
 }
 
 // Function to get video details
-export async function getVideoDetails(apiKey, videoIds) {
+export async function getVideoDetails(apiKey: string, videoIds: string[]) {
   try {
     // YouTube API allows only 50 video IDs per request
     const chunks = [];
@@ -77,7 +79,7 @@ export async function getVideoDetails(apiKey, videoIds) {
       chunks.push(videoIds.slice(i, i + 50));
     }
     
-    let allVideos = [];
+    let allVideos: any[] = [];
     
     for (const chunk of chunks) {
       const params = {
@@ -99,7 +101,7 @@ export async function getVideoDetails(apiKey, videoIds) {
 }
 
 // Function to get transcript (this requires a different approach since it's scraping)
-export async function getTranscript(videoId) {
+export async function getTranscript(videoId: string) {
   try {
     // First get the video page
     const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
@@ -154,14 +156,14 @@ export async function getTranscript(videoId) {
 }
 
 // Utility function to get video ID from URL
-export function getVideoIdFromUrl(url) {
+export function getVideoIdFromUrl(url: string): string | null {
   const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
   const match = url.match(regExp);
   return (match && match[7].length === 11) ? match[7] : null;
 }
 
 // Format video information
-export function formatVideoInfo(video) {
+export function formatVideoInfo(video: any): VideoInfo {
   const snippet = video.snippet;
   const statistics = video.statistics || {};
   

@@ -24,87 +24,88 @@ const ThemeProviderContext = createContext<ThemeProviderState | undefined>(undef
 export function ThemeProvider({
   children,
   defaultTheme = "system",
-  storageKey = "theme",
+  storageKey = "ui-theme",
   enableSystem = true,
   disableTransitionOnChange = false,
-  attribute = "data-theme",
+  attribute = "class",
 }: ThemeProviderProps) {
   const [theme, setTheme] = useState<Theme>(defaultTheme);
 
   useEffect(() => {
     const root = window.document.documentElement;
-    const existingTheme = root.getAttribute(attribute) as Theme;
-
-    // If theme already exists on root, use that
-    if (existingTheme) {
-      setTheme(existingTheme);
-      return;
-    }
-
-    // Otherwise initialize from localStorage or default
-    const initializeTheme = () => {
-      const storedTheme = localStorage.getItem(storageKey) as Theme | null;
+    
+    const initialTheme = () => {
+      // Check local storage first
+      const storedTheme = localStorage.getItem(storageKey);
       if (storedTheme) {
-        setTheme(storedTheme);
-        return;
+        return storedTheme as Theme;
       }
-
+      
+      // Then check system preference
       if (enableSystem) {
-        const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-        setTheme(systemTheme);
+        return window.matchMedia("(prefers-color-scheme: dark)").matches 
+          ? "dark" 
+          : "light";
       }
+      
+      // Fall back to default
+      return defaultTheme;
     };
-
-    initializeTheme();
-  }, [attribute, enableSystem, storageKey]);
+    
+    setTheme(initialTheme());
+  }, [defaultTheme, enableSystem, storageKey]);
 
   useEffect(() => {
     const root = window.document.documentElement;
-
+    
     if (disableTransitionOnChange) {
-      root.classList.add("no-transitions");
-      window.setTimeout(() => {
-        root.classList.remove("no-transitions");
-      }, 0);
+      root.classList.add("transition-none");
+      // Force a reflow
+      window.getComputedStyle(root).getPropertyValue("opacity");
+      
+      setTimeout(() => {
+        root.classList.remove("transition-none");
+      }, 10);
     }
-
-    if (theme === "system" && enableSystem) {
-      const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-      root.classList.remove("light", "dark");
-      root.classList.add(systemTheme);
-      root.setAttribute(attribute, systemTheme);
-      return;
-    }
-
+    
+    // Remove existing theme class
     root.classList.remove("light", "dark");
-    root.classList.add(theme);
-    root.setAttribute(attribute, theme);
-  }, [theme, attribute, disableTransitionOnChange, enableSystem]);
-
+    
+    if (theme === "system") {
+      const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches 
+        ? "dark" 
+        : "light";
+      root.classList.add(systemTheme);
+    } else {
+      root.classList.add(theme);
+    }
+  }, [theme, disableTransitionOnChange]);
+  
   // Listen for system theme changes
   useEffect(() => {
     if (!enableSystem) return;
-
+    
     const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    
     const handleChange = () => {
       if (theme === "system") {
-        const systemTheme = mediaQuery.matches ? "dark" : "light";
         const root = window.document.documentElement;
         root.classList.remove("light", "dark");
-        root.classList.add(systemTheme);
-        root.setAttribute(attribute, systemTheme);
+        root.classList.add(
+          mediaQuery.matches ? "dark" : "light"
+        );
       }
     };
-
+    
     mediaQuery.addEventListener("change", handleChange);
     return () => mediaQuery.removeEventListener("change", handleChange);
-  }, [attribute, enableSystem, theme]);
+  }, [enableSystem, theme]);
 
   const value = {
     theme,
     setTheme: (newTheme: Theme) => {
-      setTheme(newTheme);
       localStorage.setItem(storageKey, newTheme);
+      setTheme(newTheme);
     },
   };
 

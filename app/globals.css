@@ -37,7 +37,7 @@
     --background: 0 0% 0%;
     --foreground: 0 0% 98%;
     
-    --card: 0 0% 3%;
+    --card: 0 0% 0%;
     --card-foreground: 0 0% 98%;
     --popover: 0 0% 3%;
     --popover-foreground: 0 0% 98%;
@@ -74,22 +74,7 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
-  /* Improve input focus styling */
-  input:focus, 
-  button:focus,
-  select:focus,
-  textarea:focus {
-    outline: none;
-    box-shadow: 0 0 0 2px hsl(var(--ring));
-    border-color: hsl(var(--ring));
-  }
-
-  /* Remove default focus styles */
-  :focus:not(:focus-visible) {
-    outline: none;
-  }
-
-  /* Custom focus-visible styles */
+  /* Focus styles: using standard outline properties */
   :focus-visible {
     outline: 2px solid hsl(var(--ring));
     outline-offset: 2px;
@@ -115,11 +100,6 @@
   }
 }
 
-/* Disable transitions during theme changes */
-.transition-none {
-  transition: none !important;
-}
-
 /* Loader animation styling - simplified */
 .loader {
   width: 24px;
@@ -141,16 +121,39 @@
   }
 }
 
-/* Custom form styling */
-.form-input-large {
-  height: 3rem;
-  font-size: 1rem;
-  padding-left: 1rem;
-  padding-right: 1rem;
-}
-
-.form-button-large {
-  height: 3rem;
-  font-size: 1rem;
-  font-weight: 500;
+@layer components {
+  /* Clean button styles */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius);
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    transition: all 150ms;
+  }
+  
+  .btn-primary {
+    background-color: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+  }
+  
+  .btn-primary:hover {
+    opacity: 0.9;
+  }
+  
+  /* Form elements */
+  .form-input {
+    padding: 0.5rem;
+    border-radius: var(--radius);
+    border: 1px solid hsl(var(--border));
+    background-color: hsl(var(--background));
+    width: 100%;
+  }
+  
+  .form-input:focus {
+    outline: none;
+    border-color: hsl(var(--ring));
+    box-shadow: 0 0 0 1px hsl(var(--ring) / 0.3);
+  }
 }

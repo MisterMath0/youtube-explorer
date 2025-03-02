@@ -14,7 +14,7 @@ import {
 } from '@/components/ui/alert';
 import { ExtractorProps, VideoApiParams } from '@/types';
 
-const VideoTranscript: React.FC<ExtractorProps> = ({ onResults, setLoading }) => {
+const VideoTranscript: React.FC<ExtractorProps> = ({ onResults, setLoading, apiKey }) => {
   const [videoUrl, setVideoUrl] = useState<string>('');
   const [transcriptFormat, setTranscriptFormat] = useState<string>('txt');
   const [error, setError] = useState<string | null>(null);
@@ -40,6 +40,7 @@ const VideoTranscript: React.FC<ExtractorProps> = ({ onResults, setLoading }) =>
         body: JSON.stringify({
           videoUrl,
           transcriptFormat,
+          apiKey,
         } as VideoApiParams),
       });
       
@@ -63,31 +64,41 @@ const VideoTranscript: React.FC<ExtractorProps> = ({ onResults, setLoading }) =>
       exit={{ opacity: 0 }}
     >
       <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="space-y-2">
-          <Label>YouTube Video URL</Label>
+        <div className="space-y-3">
+          <Label htmlFor="video-url" className="text-base font-medium">YouTube Video URL</Label>
           <div className="relative">
             <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-500">
               <Link2 size={18} />
             </div>
             <Input
-              className="pl-10"
+              id="video-url"
+              className="pl-10 h-12 text-base"
               placeholder="https://www.youtube.com/watch?v=..."
               value={videoUrl}
               onChange={(e) => setVideoUrl(e.target.value)}
             />
           </div>
+          <p className="text-xs text-gray-500">
+            Enter a YouTube video URL or video ID
+          </p>
         </div>
         
-        <div className="space-y-2">
-          <Label>Transcript Format</Label>
-          <RadioGroup value={transcriptFormat} onValueChange={setTranscriptFormat} className="flex space-x-4">
-            <div className="flex items-center space-x-2">
+        <div className="space-y-3">
+          <Label className="text-base font-medium">Transcript Format</Label>
+          <RadioGroup value={transcriptFormat} onValueChange={setTranscriptFormat} className="flex flex-col space-y-3">
+            <div className="flex items-center space-x-3 rounded-md border p-4">
               <RadioGroupItem value="txt" id="txt" />
-              <Label htmlFor="txt">TXT (with timestamps)</Label>
+              <div>
+                <Label htmlFor="txt" className="text-base font-medium cursor-pointer">TXT Format</Label>
+                <p className="text-sm text-gray-500">Plain text with timestamps (easier to read)</p>
+              </div>
             </div>
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-3 rounded-md border p-4">
               <RadioGroupItem value="json" id="json" />
-              <Label htmlFor="json">JSON</Label>
+              <div>
+                <Label htmlFor="json" className="text-base font-medium cursor-pointer">JSON Format</Label>
+                <p className="text-sm text-gray-500">Structured data format (better for processing)</p>
+              </div>
             </div>
           </RadioGroup>
         </div>
@@ -100,7 +111,7 @@ const VideoTranscript: React.FC<ExtractorProps> = ({ onResults, setLoading }) =>
           </Alert>
         )}
         
-        <Button type="submit" className="w-full">
+        <Button type="submit" className="w-full h-12 text-base font-medium">
           Extract Transcript
         </Button>
       </form>
