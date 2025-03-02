@@ -76,10 +76,24 @@ export function ThemeProvider({
         ? "dark" 
         : "light";
       root.classList.add(systemTheme);
+      
+      // Also set the attribute if using attribute selector
+      if (attribute === "class") {
+        // Already handled by classList
+      } else {
+        root.setAttribute(attribute, systemTheme);
+      }
     } else {
       root.classList.add(theme);
+      
+      // Also set the attribute if using attribute selector
+      if (attribute === "class") {
+        // Already handled by classList
+      } else {
+        root.setAttribute(attribute, theme);
+      }
     }
-  }, [theme, disableTransitionOnChange]);
+  }, [theme, disableTransitionOnChange, attribute]);
   
   // Listen for system theme changes
   useEffect(() => {
