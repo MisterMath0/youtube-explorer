@@ -110,42 +110,37 @@ export default function Home() {
                     </CardContent>
                 </Card>
 
-                <Card className="mb-10 border border-gray-200 dark:border-gray-800 shadow-sm">
+                <Card className="mb-10 border border-gray-200 dark:border-gray-800 shadow-sm ">
                     <CardContent className="p-6">
-                    <Tabs defaultValue="channel" value={activeTab} onValueChange={setActiveTab} className="w-full">
-                        <TabsList className="grid w-full grid-cols-2 mb-6 bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700">
-                            <TabsTrigger 
-                            value="channel" 
-                            className="rounded-md py-0 px-4 text-base font-medium transition-all duration-200 ease-in-out
-                            data-[state=active]:bg-white dark:data-[state=active]:bg-gray-900 
-                            data-[state=active]:text-blue-600 dark:data-[state=active]:text-blue-400
-                            data-[state=active]:shadow-sm data-[state=active]:font-semibold
-                            hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none"
+                    <Tabs defaultValue="channel" value={activeTab} onValueChange={setActiveTab} className="w-full data-[state=active]:bg-transparent">
+                        <TabsList className="grid w-full py-3 grid-cols-2 mb-8 rounded data-[state=active]:bg-transparent">
+                            <TabsTrigger
+                                value="channel"
+                                className="rounded py-3 text-base font-medium transition-all duration-150 ease-in-out 
+                                        data-[state=active]:ring-2 data-[state=active]:ring-black dark:data-[state=active]:ring-white
+                                        data-[state=active]:shadow-lg data-[state=active]:bg-transparent"
                             >
-                            <Compass className="w-5 h-5 mr-2 inline-block" />
-                            Channel Explorer
+                                Channel Explorer
                             </TabsTrigger>
-                            <TabsTrigger 
-                            value="video" 
-                            className="rounded-md py-0 px-4 text-base font-medium transition-all duration-200 ease-in-out
-                            data-[state=active]:bg-white dark:data-[state=active]:bg-gray-900 
-                            data-[state=active]:text-blue-600 dark:data-[state=active]:text-blue-400
-                            data-[state=active]:shadow-sm data-[state=active]:font-semibold
-                            hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none"
+                            <TabsTrigger
+                                value="video"
+                                className="rounded py-3 text-base font-medium transition-all duration-150 ease-in-out 
+                                        data-[state=active]:ring-2 data-[state=active]:ring-black dark:data-[state=active]:ring-white
+                                        data-[state=active]:shadow-lg data-[state=active]:bg-transparent"
                             >
-                            <Video className="w-5 h-5 mr-2 inline-block" />
-                            Video Transcript
+                                Video Transcript
                             </TabsTrigger>
                         </TabsList>
-                        
-                        <TabsContent value="channel" className="mt-4 p-4 bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700">
-                            <ChannelExtractor onResults={handleResults} setLoading={setLoading} apiKey={apiKey} />
-                        </TabsContent>
-                        
-                        <TabsContent value="video" className="mt-4 p-4 bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700">
-                            <VideoTranscript onResults={handleResults} setLoading={setLoading} apiKey={apiKey} />
-                        </TabsContent>
-                    </Tabs>
+
+              <TabsContent value="channel" className="mt-0">
+                <ChannelExtractor onResults={handleResults} setLoading={setLoading} apiKey={apiKey} />
+              </TabsContent>
+
+              <TabsContent value="video" className="mt-0">
+                <VideoTranscript onResults={handleResults} setLoading={setLoading} apiKey={apiKey} />
+              </TabsContent>
+            </Tabs>
+
                     </CardContent>
                 </Card>
 

@@ -186,7 +186,10 @@ const ChannelExtractor: React.FC<ExtractorProps> = ({ onResults, setLoading, api
           </Alert>
         )}
         
-        <Button type="submit" className="w-full h-12 text-base font-medium">
+        <Button 
+          type="submit" 
+          className="w-full h-12 text-base font-medium focus:ring-2 focus:ring-black dark:focus:ring-gray-300 hover:ring-2 hover:ring-black dark:hover:ring-black"
+        >
           Extract Channel Data
         </Button>
       </form>
